@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.response import Response
 from knox.models import AuthToken
+from knox.auth import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class LoginView(APIView):
@@ -22,6 +24,17 @@ class LoginView(APIView):
             {"message": "Invalid credentials"},
             status=status.HTTP_401_UNAUTHORIZED
         )
+
+
+class ExampleView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        content = {
+            'foo': 'bar'
+        }
+        return Response(content)
 
 
 
